@@ -41,6 +41,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* Add brand colors to theme */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
 }
 
 :root {
@@ -76,6 +79,9 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
+  /* Add brand colors */
+  --brand-primary: oklch(0.6186 0.223 265.18);
+  --brand-secondary: oklch(0.595 0.22 31.12);
 }
 
 .dark {
@@ -110,6 +116,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+  /* Add brand colors for dark mode */
+  --brand-primary: oklch(0.485 0.23 264.37);
+  --brand-secondary: oklch(0.595 0.22 31.12);
 }
 
 @layer base {

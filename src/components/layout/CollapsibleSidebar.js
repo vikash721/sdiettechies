@@ -53,11 +53,9 @@ const MobileHeader = ({ onOpenSidebar }) => {
             <Menu size={20} />
           </Button>
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-primary text-lg font-semibold">D</span>
-            </div>
-            <span className="text-sm font-semibold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Dashboard
+            <span className="text-xl font-bold">
+              <span className="text-brand-primary">SDIET</span>
+              <span className="text-brand-secondary">Techies</span>
             </span>
           </div>
         </div>
@@ -227,11 +225,9 @@ const Sidebar = () => {
           >
             {!collapsed && (
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-primary text-lg font-semibold">D</span>
-                </div>
-                <span className="text-sm font-semibold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Dashboard
+                <span className="text-2xl font-bold">
+                  <span className="text-brand-primary">SDIET</span>
+                  <span className="text-brand-secondary">Techies</span>
                 </span>
               </div>
             )}
@@ -250,11 +246,9 @@ const Sidebar = () => {
         {isMobile && (
           <div className="flex items-center justify-between h-16 shrink-0 px-4 border-b border-gray-200 dark:border-gray-800">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-primary text-lg font-semibold">D</span>
-              </div>
-              <span className="text-sm font-semibold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Dashboard
+              <span className="text-xl font-bold">
+                <span className="text-brand-primary">SDIET</span>
+                <span className="text-brand-secondary">Techies</span>
               </span>
             </div>
             <Button
