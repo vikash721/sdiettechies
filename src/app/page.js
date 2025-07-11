@@ -1,12 +1,11 @@
+"use client";
+
+import { StudentDashboard } from "@/components/layout/StudentDashboard";
 
 export default function Home() {
   return (
-
-   <div className=" bg-black min-h-screen">
-bfngn
-
-
-   </div>
-   
+    <main className="min-h-screen">
+      <StudentDashboard />
+    </main>
   );
 }

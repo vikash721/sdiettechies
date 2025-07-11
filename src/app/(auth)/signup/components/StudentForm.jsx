@@ -16,15 +16,71 @@ import { Textarea } from "@/components/ui/textarea";
 import { EmailVerification } from "./EmailVerification";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 const courses = [
-    "B.Tech - Computer Science",
-    "B.Tech - Information Technology",
-    "B.Tech - Electronics",
-    "B.Tech - Mechanical",
-    "B.Tech - Civil",
-    "M.Tech - Computer Science",
-    "M.Tech - Electronics",
+    // 4-year courses
+    {
+        name: "B.Tech - Computer Science & Engineering",
+        duration: 4,
+        category: "Engineering"
+    },
+    {
+        name: "B.Tech - Information Technology",
+        duration: 4,
+        category: "Engineering"
+    },
+    {
+        name: "B.Tech - Electronics & Communication",
+        duration: 4,
+        category: "Engineering"
+    },
+    {
+        name: "B.Tech - Artificial Intelligence & ML",
+        duration: 4,
+        category: "Engineering"
+    },
+    {
+        name: "B.Tech - Data Science",
+        duration: 4,
+        category: "Engineering"
+    },
+    // 3-year courses
+    {
+        name: "BCA - Bachelor of Computer Applications",
+        duration: 3,
+        category: "Computer Applications"
+    },
+    {
+        name: "BCA - Data Science & Analytics",
+        duration: 3,
+        category: "Computer Applications"
+    },
+    {
+        name: "BCA - Cloud Computing & DevOps",
+        duration: 3,
+        category: "Computer Applications"
+    },
+    {
+        name: "BBA - Digital Marketing",
+        duration: 3,
+        category: "Business"
+    },
+    {
+        name: "BBA - IT Management",
+        duration: 3,
+        category: "Business"
+    },
+    {
+        name: "BSc - Computer Science",
+        duration: 3,
+        category: "Science"
+    },
+    {
+        name: "BSc - Data Analytics",
+        duration: 3,
+        category: "Science"
+    }
 ];
 
 const semesters = Array.from({ length: 8 }, (_, i) => `Semester ${i + 1}`);
@@ -42,10 +98,29 @@ const fadeIn = {
     transition: { duration: 0.3, ease: "easeInOut" }
 };
 
+const generateBatchYears = (courseDuration) => {
+    if (!courseDuration) return [];
+
+    const currentYear = new Date().getFullYear();
+    const batchYears = [];
+
+    // Generate batches for current year and 4 years back
+    for (let startYear = currentYear; startYear >= currentYear - 4; startYear--) {
+        batchYears.push({
+            label: `${startYear} - ${startYear + courseDuration}`, // Show range based on course duration
+            value: startYear.toString() // Pass only the starting year
+        });
+    }
+
+    return batchYears;
+};
+
 export function StudentForm({ onBack, onSubmit }) {
     const [step, setStep] = useState(STEPS.PERSONAL);
     const [formData, setFormData] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [courseDuration, setCourseDuration] = useState(null);
+    const [skillInput, setSkillInput] = useState("");
     const { toast } = useToast();
 
     const handleChange = (e) => {
@@ -53,8 +128,50 @@ export function StudentForm({ onBack, onSubmit }) {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleSkillInputChange = (e) => {
+        setSkillInput(e.target.value);
+    };
+
+    const handleSkillInputKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            addSkill();
+        }
+    };
+
+    const addSkill = () => {
+        const trimmedSkill = skillInput.trim().replace(/,/g, '');
+        if (trimmedSkill) {
+            const currentSkills = formData.skills ? formData.skills.split(',').filter(Boolean) : [];
+            if (!currentSkills.includes(trimmedSkill)) {
+                const newSkills = [...currentSkills, trimmedSkill].join(',');
+                setFormData(prev => ({ ...prev, skills: newSkills }));
+            }
+            setSkillInput('');
+        }
+    };
+
+    const removeSkill = (skillToRemove) => {
+        const currentSkills = formData.skills ? formData.skills.split(',').filter(Boolean) : [];
+        const newSkills = currentSkills.filter(skill => skill !== skillToRemove).join(',');
+        setFormData(prev => ({ ...prev, skills: newSkills }));
+    };
+
     const handleSelectChange = (name, value) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (name === "course") {
+            const selectedCourse = courses.find(course => course.name === value);
+            setCourseDuration(selectedCourse.duration);
+            // Reset batch if course changes
+            setFormData(prev => ({ ...prev, [name]: value, batch: "" }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
+    };
+
+    // Get available semesters based on course duration
+    const getAvailableSemesters = () => {
+        if (!courseDuration) return [];
+        return Array.from({ length: courseDuration * 2 }, (_, i) => `Semester ${i + 1}`);
     };
 
     const handlePersonalSubmit = (e) => {
@@ -161,9 +278,9 @@ export function StudentForm({ onBack, onSubmit }) {
                                             <SelectValue placeholder="Select your course" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {courses.map((course) => (
-                                                <SelectItem key={course} value={course}>
-                                                    {course}
+                                            {Object.values(courses).map((course) => (
+                                                <SelectItem key={course.name} value={course.name}>
+                                                    {course.name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -177,12 +294,13 @@ export function StudentForm({ onBack, onSubmit }) {
                                     <Select
                                         value={formData.semester || ""}
                                         onValueChange={(value) => handleSelectChange("semester", value)}
+                                        disabled={!courseDuration}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select semester" />
+                                            <SelectValue placeholder={courseDuration ? "Select semester" : "Select course first"} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {semesters.map((semester) => (
+                                            {getAvailableSemesters().map((semester) => (
                                                 <SelectItem key={semester} value={semester}>
                                                     {semester}
                                                 </SelectItem>
@@ -193,27 +311,63 @@ export function StudentForm({ onBack, onSubmit }) {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="batch">Batch Year</Label>
-                                    <Input
-                                        id="batch"
-                                        name="batch"
-                                        placeholder="e.g., 2020-2024"
+                                    <Select
                                         value={formData.batch || ""}
-                                        onChange={handleChange}
-                                        required
-                                    />
+                                        onValueChange={(value) => handleSelectChange("batch", value)}
+                                        disabled={!courseDuration}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder={courseDuration ? "Select your batch" : "Select course first"} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {generateBatchYears(courseDuration).map((batch) => (
+                                                <SelectItem key={batch.value} value={batch.value}>
+                                                    {batch.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="skills">Technical Skills</Label>
-                                <Textarea
-                                    id="skills"
-                                    name="skills"
-                                    placeholder="List your technical skills (e.g., Programming languages, tools, frameworks)"
-                                    value={formData.skills || ""}
-                                    onChange={handleChange}
-                                    className="h-24"
-                                />
+                                <div className="space-y-2">
+                                    <div className="flex flex-wrap gap-2">
+                                        <AnimatePresence>
+                                            {formData.skills && formData.skills.split(',').filter(Boolean).map((skill) => (
+                                                <motion.div
+                                                    key={skill}
+                                                    initial={{ opacity: 0, scale: 0.8 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    exit={{ opacity: 0, scale: 0.8 }}
+                                                    className="group flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                                                >
+                                                    {skill}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeSkill(skill)}
+                                                        className="opacity-50 hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <X className="w-3 h-3" />
+                                                    </button>
+                                                </motion.div>
+                                            ))}
+                                        </AnimatePresence>
+                                    </div>
+                                    <Input
+                                        id="skillInput"
+                                        value={skillInput}
+                                        onChange={handleSkillInputChange}
+                                        onKeyDown={handleSkillInputKeyDown}
+                                        onBlur={addSkill}
+                                        placeholder="Type a skill and press Enter or comma to add"
+                                        className="mt-2"
+                                    />
+                                </div>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    Press Enter or comma after each skill
+                                </p>
                             </div>
 
                             <div className="space-y-2">

@@ -43,7 +43,7 @@ export function FormLayout({
                             onClick={onBack}
                             className="text-gray-500"
                         >
-                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            <ArrowLeft className="w-4 h-4 mr-2 cursor-pointer" />
                             Back
                         </Button>
 

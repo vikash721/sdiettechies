@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Users, UserCog, ArrowRight, ArrowLeft, Code2, Sparkles } from "lucide-react";
+import { GraduationCap, Users, UserCog, ArrowRight, ArrowLeft, Code2, Sparkles, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { clsx } from "clsx";
 import { OnboardingForm } from "./components/OnboardingForm";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const roles = [
     {
@@ -206,10 +208,145 @@ const BrandPanel = () => {
     );
 };
 
+const LoginForm = ({ onSignupClick }) => {
+    const [mounted, setMounted] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+    const { toast } = useToast();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        toast.success("Login successful!", {
+            description: "Welcome back to SDIETTechies!"
+        });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    if (!mounted) {
+        return null; // or a loading spinner
+    }
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="w-full max-w-md space-y-8"
+        >
+            <div className="space-y-2 text-center">
+                <h1 className="text-3xl font-bold tracking-tighter bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent">
+                    Welcome Back
+                </h1>
+                <p className="text-gray-500 dark:text-gray-400">
+                    Sign in to your account to continue
+                </p>
+            </div>
+
+            <Card className="p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="Enter your email"
+                                className="pl-10"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <Input
+                                id="password"
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Enter your password"
+                                className="pl-10 pr-10"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="w-4 h-4" />
+                                ) : (
+                                    <Eye className="w-4 h-4" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <Link
+                            href="/forgot-password"
+                            className="text-sm text-primary hover:underline"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+
+                    <Button
+                        type="submit"
+                        className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground cursor-pointer"
+                    >
+                        Sign In
+                    </Button>
+                </form>
+
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Or</span>
+                    </div>
+                </div>
+
+                <Button
+                    variant="outline"
+                    className="w-full cursor-pointer"
+                    onClick={onSignupClick}
+                >
+                    Create new account
+                </Button>
+            </Card>
+        </motion.div>
+    );
+};
+
 export default function Signup() {
+    const [mounted, setMounted] = useState(false);
+    const [step, setStep] = useState(0); // 0 for login, 1 for role selection, 2 for form
     const [selectedRole, setSelectedRole] = useState(null);
-    const [step, setStep] = useState(1);
     const { warning, success } = useToast();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleContinue = (e) => {
         if (!selectedRole) {
@@ -223,25 +360,33 @@ export default function Signup() {
     };
 
     const handleBack = () => {
-        setStep(1);
+        if (step === 2) {
+            setStep(1);
+        } else if (step === 1) {
+            setStep(0);
+        }
     };
 
     const handleSubmit = (formData) => {
-        // Here you would typically send the data to your API
         console.log('Form submitted:', { role: selectedRole, ...formData });
         success("Account created successfully!", {
             description: "Welcome to SDIETTechies!"
         });
-        // Redirect to dashboard or verification page
     };
+
+    if (!mounted) {
+        return null; // or a loading spinner
+    }
 
     return (
         <div className="min-h-screen flex">
             <BrandPanel />
 
             <div className="flex-1 flex items-center justify-center p-4 lg:p-8 bg-gray-50 dark:bg-gray-900">
-                <AnimatePresence mode="wait">
-                    {step === 1 ? (
+                <AnimatePresence mode="wait" initial={false}>
+                    {step === 0 ? (
+                        <LoginForm key="login" onSignupClick={() => setStep(1)} />
+                    ) : step === 1 ? (
                         <motion.div
                             key="step1"
                             initial={{ opacity: 0, x: -20 }}
@@ -273,13 +418,11 @@ export default function Signup() {
                             <div className="flex items-center justify-between pt-4">
                                 <Button
                                     variant="ghost"
-                                    className="text-gray-500"
-                                    asChild
+                                    className="text-gray-500 cursor-pointer"
+                                    onClick={handleBack}
                                 >
-                                    <Link href="/">
-                                        <ArrowLeft className="w-4 h-4 mr-2" />
-                                        Back to Home
-                                    </Link>
+                                    <ArrowLeft className="w-4 h-4 mr-2 " />
+                                    Back to Login
                                 </Button>
 
                                 <Button
@@ -288,7 +431,7 @@ export default function Signup() {
                                     className={clsx(
                                         "relative overflow-hidden transition-all duration-200",
                                         selectedRole
-                                            ? "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-md hover:shadow-lg"
+                                            ? "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-md hover:shadow-lg cursor-pointer"
                                             : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800"
                                     )}
                                 >
