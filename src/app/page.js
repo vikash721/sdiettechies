@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 const page = () => {
   return (
     <>
-    <Button variant="link">Click me</Button>
+    <Button variant="destructive">Click me1234</Button>
     </>
   )
 }
