@@ -1,9 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SDIET Techies 🎓💻
+
+Welcome to **SDIET Techies** - the official community website for Sri Dharmasthala Manjunatheshwara Institute of Engineering and Technology (SDIET). This platform connects students, faculty, and alumni in our vibrant tech community.
+
+## About SDIET Techies
+
+SDIET Techies is a community-driven platform designed to:
+- 🤝 Connect students across different branches and years
+- 📚 Share academic resources and study materials
+- 💡 Showcase innovative projects and research
+- 🎯 Provide placement and internship opportunities
+- 🏆 Highlight achievements and events
+- 🌐 Foster collaboration and knowledge sharing
+
+## Features
+
+- **Student Directory** - Connect with peers across departments
+- **Project Showcase** - Display your innovative projects
+- **Resource Hub** - Access study materials and notes
+- **Event Calendar** - Stay updated with college events
+- **Placement Portal** - Job opportunities and career guidance
+- **Alumni Network** - Connect with successful graduates
+- **Tech Forums** - Discuss latest technologies and trends
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18.0 or later
+- npm, yarn, pnpm, or bun
 
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/sdiettechies.git
+cd sdiettechies
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
@@ -14,23 +56,53 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) to view the website.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend**: Next.js 14 with React
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **UI Components**: Radix UI primitives
+- **Icons**: Lucide React
+- **Fonts**: Geist Sans & Geist Mono
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
+We welcome contributions from all SDIET students and faculty! Here's how you can help:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Contribution Guidelines
+- Follow the existing code style
+- Write clear commit messages
+- Test your changes thoroughly
+- Update documentation as needed
 
-## Deploy on Vercel
+## Community Guidelines
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Be respectful and inclusive
+- Share knowledge freely
+- Help fellow students
+- Maintain academic integrity
+- Follow college policies
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+
+For any queries or suggestions:
+- 📧 Email: [your-email@sdiet.edu]
+- 💬 Discord: [Your Discord Server]
+- 📱 WhatsApp: [Community Group Link]
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Made with ❤️ by SDIET Students for SDIET Students**
+
+*Connecting minds, building futures at SDIET* 🚀
