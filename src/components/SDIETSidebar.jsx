@@ -30,7 +30,8 @@ import {
   LogOut,
   HelpCircle,
   PanelLeftClose,
-  PanelLeft
+  PanelLeft,
+  Menu
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -99,15 +100,26 @@ const SDIETSidebar = () => {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
-            <GraduationCap className="h-4 w-4" />
+        <div className="flex items-center justify-center px-2 py-3 group-data-[collapsible=icon]:justify-center">
+          {/* Show menu icon only when collapsed */}
+          <div className="hidden group-data-[collapsible=icon]:flex w-full items-center justify-center">
+            <SidebarTrigger className="h-8 w-8">
+              <Menu className="h-4 w-4" />
+            </SidebarTrigger>
           </div>
-          <div className="flex flex-col group-data-[collapsible=icon]:hidden flex-1">
-            <span className="text-sm font-medium">SDIET Techies</span>
-            <span className="text-xs text-muted-foreground">Community</span>
+          
+          {/* Show brand text and collapse button only when expanded */}
+          <div className="group-data-[collapsible=icon]:hidden flex items-center gap-2 w-full">
+
+            <div className="flex flex-col flex-1">
+              <span className="text-lg font-bold">
+                <span className="text-blue-600">SDIET</span>
+                <span className="text-orange-600">Techies</span>
+              </span>
+              <span className="text-sm text-muted-foreground">Community</span>
+            </div>
+            <SidebarTrigger className="ml-auto h-8 w-8" />
           </div>
-          <SidebarTrigger className="ml-auto h-8 w-8 group-data-[collapsible=icon]:hidden" />
         </div>
       </SidebarHeader>
 
@@ -143,8 +155,16 @@ const SDIETSidebar = () => {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="w-full justify-start cursor-pointer">
-                  <div className="flex items-center gap-2 w-full">
+                <SidebarMenuButton className="w-full justify-center group-data-[collapsible=icon]:justify-center cursor-pointer">
+                  {/* Collapsed state - show only avatar centered */}
+                  <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center w-full px-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs font-semibold">
+                      ST
+                    </div>
+                  </div>
+                  
+                  {/* Expanded state - show full profile info */}
+                  <div className="group-data-[collapsible=icon]:hidden flex items-center gap-2 w-full">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs font-semibold">
                       ST
                     </div>

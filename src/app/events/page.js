@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,8 +16,6 @@ import {
   Search, 
   Filter,
   Users,
-  Plus,
-  ExternalLink,
   Bookmark,
   BookmarkCheck,
   Share2
@@ -27,7 +25,9 @@ const EventsPage = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [bookmarkedEvents, setBookmarkedEvents] = useState(new Set())
+  const [carouselApi, setCarouselApi] = useState()
   const [currentSlide, setCurrentSlide] = useState(0)
+
 
   // Sample events data
   const events = [
@@ -180,16 +180,27 @@ const EventsPage = () => {
   const upcomingEvents = filteredEvents.filter(event => event.status === 'upcoming')
   const pastEvents = filteredEvents.filter(event => event.status === 'past')
 
-  // Auto-carousel effect
+  // Carousel API effect to track current slide
   useEffect(() => {
-    if (featuredEvents.length > 1) {
-      const timer = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % featuredEvents.length)
-      }, 4000) // Change slide every 4 seconds
+    if (!carouselApi) return
 
-      return () => clearInterval(timer)
+    const onSelect = () => {
+      setCurrentSlide(carouselApi.selectedScrollSnap())
     }
-  }, [featuredEvents.length])
+
+    carouselApi.on('select', onSelect)
+    onSelect() // Set initial slide
+
+    return () => carouselApi.off('select', onSelect)
+  }, [carouselApi])
+
+  // Function to scroll to specific slide
+  const scrollTo = useCallback((index) => {
+    if (carouselApi) {
+      carouselApi.scrollTo(index)
+    }
+  }, [carouselApi])
+
 
   const toggleBookmark = (eventId) => {
     setBookmarkedEvents(prev => {
@@ -223,103 +234,90 @@ const EventsPage = () => {
     return colors[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300'
   }
 
-  // Mobile-optimized Carousel Banner Component
+  // Enhanced Carousel Banner Component with smooth animations
   const EventBanner = ({ event }) => (
-    <div className="relative w-full h-32 sm:h-48 md:h-64 lg:h-80 overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800">
-      {/* Background Image */}
+    <div className="relative w-full h-32 sm:h-48 md:h-64 lg:h-80 overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 group cursor-pointer">
+      {/* Background Image with zoom effect */}
       {event.image && (
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-out group-hover:scale-105"
           style={{ backgroundImage: `url(${event.image})` }}
         />
       )}
-      {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/50" />
+      {/* Animated gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/40 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+      
+      {/* Subtle animated particles effect */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-10 left-10 w-1 h-1 bg-white rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
+        <div className="absolute top-20 right-20 w-1 h-1 bg-white rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-20 w-1 h-1 bg-white rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+      </div>
       <div className="relative z-10 flex flex-col justify-center h-full px-3 sm:px-6 md:px-8 lg:px-12 text-white">
-        <div className="w-full">
+        <div className="w-full transform transition-all duration-500 group-hover:translate-y-[-2px]">
           {/* Mobile Layout */}
           <div className="block sm:hidden">
-            <Badge className="mb-1 bg-white/20 text-white border-white/30 text-xs px-2 py-0.5">
-              Featured
-            </Badge>
-            <h2 className="text-base font-bold mb-1 leading-tight line-clamp-2">
+            <h2 className="text-base font-bold mb-1 leading-tight line-clamp-2 drop-shadow-lg">
               {event.title}
             </h2>
             <div className="flex items-center gap-3 mb-2 text-xs">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 transition-all duration-300 hover:bg-black/30">
                 <Calendar className="h-3 w-3" />
                 {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 transition-all duration-300 hover:bg-black/30">
                 <Clock className="h-3 w-3" />
                 {event.time}
               </div>
             </div>
-            <Button size="sm" className="bg-white text-blue-700 hover:bg-blue-50 text-xs px-3 py-1 h-7">
-              Register
+            <Button size="sm" className="bg-white/90 backdrop-blur-sm text-blue-700 hover:bg-white hover:scale-105 transition-all duration-200 text-xs px-3 py-1 h-7 shadow-lg">
+              Register Now
             </Button>
           </div>
 
           {/* Tablet and Desktop Layout */}
           <div className="hidden sm:block">
-            <Badge className="mb-2 md:mb-3 bg-white/20 hover:bg-white/30 text-white border-white/30 text-xs sm:text-sm">
-              Featured Event
-            </Badge>
-            <h2 className="text-xl md:text-2xl lg:text-4xl font-bold mb-2 md:mb-3 leading-tight">
+            <h2 className="text-xl md:text-2xl lg:text-4xl font-bold mb-2 md:mb-3 leading-tight drop-shadow-2xl">
               {event.title}
             </h2>
-            <p className="text-sm md:text-lg lg:text-xl mb-3 md:mb-4 text-blue-100 leading-relaxed line-clamp-2 md:line-clamp-3">
+            <p className="text-sm md:text-lg lg:text-xl mb-3 md:mb-4 text-blue-100 leading-relaxed line-clamp-2 md:line-clamp-3 drop-shadow-lg">
               {event.description}
             </p>
             <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-4 md:mb-6 text-xs sm:text-sm">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 transition-all duration-300 hover:bg-black/30">
                 <Calendar className="h-4 w-4" />
                 {formatDate(event.date)}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 transition-all duration-300 hover:bg-black/30">
                 <Clock className="h-4 w-4" />
                 {event.time}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 transition-all duration-300 hover:bg-black/30">
                 <MapPin className="h-4 w-4" />
                 {event.location}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 transition-all duration-300 hover:bg-black/30">
                 <Users className="h-4 w-4" />
                 {event.attendees}/{event.maxAttendees}
               </div>
             </div>
             <div className="flex gap-3">
-              <Button size="default" className="bg-white text-blue-700 hover:bg-blue-50">
+              <Button size="default" className="bg-white/90 backdrop-blur-sm text-blue-700 hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg">
                 Register Now
               </Button>
-              <Button size="default" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+              <Button size="default" variant="outline" className="border-white/30 bg-black/20 backdrop-blur-sm text-white hover:bg-white/20 hover:scale-105 transition-all duration-300">
                 Learn More
               </Button>
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Slide indicators */}
-      {featuredEvents.length > 1 && (
-        <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex gap-1 sm:gap-2">
-          {featuredEvents.map((_, index) => (
-            <button
-              key={index}
-              className={`w-1 h-1 sm:w-2 sm:h-2 rounded-full transition-all ${
-                index === currentSlide ? 'bg-white' : 'bg-white/50'
-              }`}
-              onClick={() => setCurrentSlide(index)}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 
   const EventCard = ({ event, featured = false }) => (
-    <Card className={`group hover:shadow-lg transition-all duration-300 ${featured ? 'border-blue-200 dark:border-blue-800' : ''}`}>
+    <Card className={`group hover:shadow-lg transition-all duration-300 pt-0 ${featured ? 'border-blue-200 dark:border-blue-800' : ''}`}>
       <div className="relative">
         <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950">
           <div className="flex h-full items-center justify-center">
@@ -395,7 +393,7 @@ const EventsPage = () => {
             <div className="flex gap-2">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="cursor-pointer">
                     View Details
                   </Button>
                 </DialogTrigger>
@@ -458,8 +456,57 @@ const EventsPage = () => {
     <div className="space-y-6">
       {/* Featured Events Carousel Banner */}
       {featuredEvents.length > 0 && (
-        <div className="relative -mx-4 sm:-mx-2 md:mx-0">
-          <EventBanner event={featuredEvents[currentSlide]} />
+        <div className="relative -mx-4 sm:-mx-2 md:mx-0 mb-8">
+          <Carousel 
+            className="w-full"
+            setApi={setCarouselApi}
+            opts={{
+              align: "center",
+              loop: true,
+            }}
+          >
+            <CarouselContent className="-ml-0">
+              {featuredEvents.map((event, index) => (
+                <CarouselItem key={event.id} className="pl-0">
+                  <div className="relative group">
+                    <EventBanner event={event} />
+                    
+                    {/* Slide counter */}
+                    <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full border border-white/20 mr-1">
+                      {index + 1} of {featuredEvents.length}
+                    </div>
+                    
+                    {/* Swipe indicator for mobile */}
+                    <div className="absolute bottom-4 left-4 sm:hidden bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full border border-white/20 animate-pulse">
+                      👆 Swipe
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            {/* Navigation arrows - hidden on mobile, visible on desktop */}
+            <CarouselPrevious className="hidden cursor-pointer sm:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 hover:text-white hover:scale-110 transition-all duration-300 shadow-lg" />
+            <CarouselNext className="hidden cursor-pointer sm:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 hover:text-white hover:scale-110 transition-all duration-300 shadow-lg" />
+            
+            {/* Custom dots indicator */}
+            {featuredEvents.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                {featuredEvents.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-125 ${
+                      index === currentSlide 
+                        ? 'bg-white shadow-lg' 
+                        : 'bg-white/50 hover:bg-white/80'
+                    }`}
+                    onClick={() => scrollTo(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </Carousel>
         </div>
       )}
 

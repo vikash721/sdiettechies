@@ -10,8 +10,14 @@ const ConditionalLayout = ({ children }) => {
   // Routes that should not show sidebar and topbar
   const authRoutes = ['/auth/login', '/auth/signup', '/auth/forgot-password', '/auth/reset-password']
   
+  // Routes that should not show the header bar (but keep sidebar)
+  const noHeaderRoutes = []
+  
   // Check if current route is an auth route
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
+  
+  // Check if current route should not show header
+  const isNoHeaderRoute = noHeaderRoutes.some(route => pathname.startsWith(route))
   
   // Function to get page title based on current route
   const getPageTitle = (path) => {
@@ -23,7 +29,8 @@ const ConditionalLayout = ({ children }) => {
       '/projects': 'Project Showcase',
       '/events': 'Events',
       '/forums': 'Tech Forums',
-      '/placements': 'Placement Portal'
+      '/placements': 'Placement Portal',
+      '/profile': 'Profile'
     }
     
     // Handle dynamic routes and sub-routes
@@ -47,7 +54,8 @@ const ConditionalLayout = ({ children }) => {
       '/projects': 'Discover innovative student projects',
       '/events': 'Upcoming and past college events',
       '/forums': 'Discuss technology and trends',
-      '/placements': 'Career opportunities and guidance'
+      '/placements': 'Career opportunities and guidance',
+      '/profile': 'Your profile and settings'
     }
     
     // Handle dynamic routes and sub-routes
@@ -71,17 +79,22 @@ const ConditionalLayout = ({ children }) => {
     <SidebarProvider>
       <SDIETSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            {/* Mobile Sidebar Trigger - Only visible on mobile */}
-            <SidebarTrigger className="md:hidden -ml-1" />
-            <div className="flex flex-col mb-5 mt-5">
-              <h1 className="text-lg font-semibold">{getPageTitle(pathname)}</h1>
-              <p className="text-xs text-muted-foreground">{getPageDescription(pathname)}</p>
+        {/* Conditional Header - hidden for profile page */}
+        {!isNoHeaderRoute && (
+          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+            <div className="flex items-center gap-2 px-4">
+              {/* Mobile Sidebar Trigger - Only visible on mobile */}
+              <SidebarTrigger className="md:hidden -ml-1" />
+              <div className="flex flex-col mb-5 mt-5">
+                <h1 className="text-lg font-semibold">{getPageTitle(pathname)}</h1>
+                <p className="text-xs text-muted-foreground">{getPageDescription(pathname)}</p>
+              </div>
             </div>
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          </header>
+        )}
+        
+        {/* Conditional Content Container - no padding for profile page */}
+        <div className={`flex flex-1 flex-col ${isNoHeaderRoute ? '' : 'gap-4 p-4 pt-0'}`}>
           {children}
         </div>
       </SidebarInset>
