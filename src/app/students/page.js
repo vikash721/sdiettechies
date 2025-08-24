@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Sample student data - in a real app, this would come from an API
 const studentsData = [
@@ -167,27 +168,33 @@ const StudentsPage = () => {
           </div>
           
           <div className="flex flex-col xs:flex-row gap-2 sm:gap-2 sm:flex-shrink-0">
-            <select
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              className="flex-1 xs:flex-none px-3 py-2 h-11 md:h-12 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white min-w-0 sm:min-w-[160px]"
-            >
-              <option value="all">All Branches</option>
-              {branches.map(branch => (
-                <option key={branch} value={branch}>{branch}</option>
-              ))}
-            </select>
-            
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="flex-1 xs:flex-none px-3 py-2 h-11 md:h-12 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white min-w-0 sm:min-w-[120px]"
-            >
-              <option value="all">All Years</option>
-              {years.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
+            <div className="w-full sm:w-auto min-w-0 sm:min-w-[160px] md:min-w-[180px]">
+              <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+                <SelectTrigger className="h-11 md:h-12 w-full text-sm leading-tight">
+                  <SelectValue placeholder="All Branches" />
+                </SelectTrigger>
+                <SelectContent position="popper" sideOffset={6} align="start" className="z-50 max-h-64">
+                  <SelectItem value="all">All Branches</SelectItem>
+                  {branches.map((branch) => (
+                    <SelectItem key={branch} value={branch}>{branch}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="w-full sm:w-auto min-w-0 sm:min-w-[120px] md:min-w-[140px]">
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger className="h-11 md:h-12 w-full text-sm leading-tight">
+                  <SelectValue placeholder="All Years" />
+                </SelectTrigger>
+                <SelectContent position="popper" sideOffset={6} align="start" className="z-50 max-h-64">
+                  <SelectItem value="all">All Years</SelectItem>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>
