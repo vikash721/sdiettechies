@@ -1,3 +1,7 @@
+import React from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
 export const metadata = {
   title: "Home | SDIET Techies",
   description: "Welcome to SDIET Techies, the official community portal for SDIET. Connect with students, explore projects, and join events.",
@@ -32,9 +36,6 @@ export const metadata = {
     canonical: "/"
   }
 };
-import React from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const page = () => {
   return (
