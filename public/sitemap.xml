@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://sdiettechies.vercel.app/</loc>
+  </url>
+  <url>
+    <loc>https://sdiettechies.vercel.app/auth/login</loc>
+  </url>
+  <url>
+    <loc>https://sdiettechies.vercel.app/auth/signup</loc>
+  </url>
+  <url>
+    <loc>https://sdiettechies.vercel.app/events</loc>
+  </url>
+  <url>
+    <loc>https://sdiettechies.vercel.app/profile</loc>
+  </url>
+  <url>
+    <loc>https://sdiettechies.vercel.app/students</loc>
+  </url>
+</urlset>

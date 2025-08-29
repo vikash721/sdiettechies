@@ -1,3 +1,37 @@
+export const metadata = {
+  title: "Home | SDIET Techies",
+  description: "Welcome to SDIET Techies, the official community portal for SDIET. Connect with students, explore projects, and join events.",
+  keywords: [
+    "SDIET", "community", "students", "projects", "events", "engineering", "technology", "portal"
+  ],
+  openGraph: {
+    title: "Home | SDIET Techies",
+    description: "Welcome to SDIET Techies, the official community portal for SDIET. Connect with students, explore projects, and join events.",
+    url: "https://sdiettechies.vercel.app/",
+    images: [
+      {
+        url: "/public/globe.svg",
+        width: 1200,
+        height: 630,
+        alt: "SDIET Techies Community Portal"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Home | SDIET Techies",
+    description: "Welcome to SDIET Techies, the official community portal for SDIET. Connect with students, explore projects, and join events.",
+    images: [
+      {
+        url: "/public/globe.svg",
+        alt: "SDIET Techies Community Portal"
+      }
+    ]
+  },
+  alternates: {
+    canonical: "/"
+  }
+};
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
