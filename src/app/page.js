@@ -42,7 +42,7 @@ const page = () => {
     <div className="flex-1 space-y-4">
       {/* Welcome Section */}
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
-        <h2 className="text-2xl font-bold mb-2">Welcome to SDIET Techies! 🎓</h2>
+        <h1 className="text-3xl font-bold mb-2">Welcome to SDIET Techies! 🎓</h1>
         <p className="text-muted-foreground mb-4">
           Your gateway to connect with fellow students, explore innovative projects, and build your career at 
           Sri Dharmasthala Manjunatheshwara Institute of Engineering and Technology.
@@ -54,68 +54,73 @@ const page = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Students</CardTitle>
-            <span className="text-2xl">👥</span>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2,847</div>
-            <p className="text-xs text-muted-foreground">
-              +12% from last month
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projects Shared</CardTitle>
-            <span className="text-2xl">💡</span>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">456</div>
-            <p className="text-xs text-muted-foreground">
-              +23% from last month
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Placement Rate</CardTitle>
-            <span className="text-2xl">🎯</span>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">89%</div>
-            <p className="text-xs text-muted-foreground">
-              Current batch
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Events This Month</CardTitle>
-            <span className="text-2xl">📅</span>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              5 upcoming
-            </p>
-          </CardContent>
-        </Card>
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Community Stats</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Students</CardTitle>
+              <span className="text-2xl">👥</span>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">2,847</div>
+              <p className="text-xs text-muted-foreground">
+                +12% from last month
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Projects Shared</CardTitle>
+              <span className="text-2xl">💡</span>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">456</div>
+              <p className="text-xs text-muted-foreground">
+                +23% from last month
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Placement Rate</CardTitle>
+              <span className="text-2xl">🎯</span>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">89%</div>
+              <p className="text-xs text-muted-foreground">
+                Current batch
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Events This Month</CardTitle>
+              <span className="text-2xl">📅</span>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+              <p className="text-xs text-muted-foreground">
+                5 upcoming
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Projects</CardTitle>
-            <CardDescription>Latest innovative projects from students</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <h3 className="text-xl font-semibold">Recent Projects</h3>
+              <CardDescription>Latest innovative projects from students</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
             <div className="flex items-center space-x-4">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               <div className="flex-1">
@@ -142,7 +147,7 @@ const page = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Upcoming Events</CardTitle>
+            <h3 className="text-xl font-semibold">Upcoming Events</h3>
             <CardDescription>Don&apos;t miss these exciting events</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -170,6 +175,7 @@ const page = () => {
           </CardContent>
         </Card>
       </div>
+    </div>
     </div>
   )
 }

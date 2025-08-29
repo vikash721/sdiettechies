@@ -454,6 +454,14 @@ const EventsPage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4">
+        <div>
+          <h1 className="text-3xl font-bold">Campus Events</h1>
+          <p className="text-muted-foreground">Discover and participate in SDIET community events</p>
+        </div>
+      </div>
+      
       {/* Featured Events Carousel Banner */}
       {featuredEvents.length > 0 && (
         <div className="relative -mx-4 sm:-mx-2 md:mx-0 mb-8">

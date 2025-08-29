@@ -27,6 +27,6 @@ export const metadata = {
     ]
   },
   alternates: {
-    canonical: "/auth/login"
+    canonical: "https://sdiettechies.vercel.app/auth/loginyes"
   }
 };
