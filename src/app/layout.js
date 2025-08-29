@@ -18,7 +18,7 @@ export const metadata = {
     default: "SDIET Techies - Community Portal",
     template: "%s | SDIET Techies"
   },
-  description: "Official community website for Sri Dharmasthala Manjunatheshwara Institute of Engineering and Technology. Connect, learn, and grow with fellow students, faculty, and alumni.",
+  description: "Official tech community website for Satyug Darshan Institute of Engineering and Technology. Connect, learn, and grow with fellow students, faculty, and alumni.",
   keywords: [
     "SDIET", "engineering", "technology", "students", "community", "college", "Karnataka", "education", "alumni", "faculty", "events", "projects"
   ],
