@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { eventsData, getFeaturedEvents } from '@/lib/events-data'
 import { 
   Calendar, 
   Clock, 
@@ -28,136 +30,8 @@ const EventsPage = () => {
   const [carouselApi, setCarouselApi] = useState()
   const [currentSlide, setCurrentSlide] = useState(0)
 
-
-  // Sample events data
-  const events = [
-    {
-      id: 1,
-      title: "AI & Machine Learning Workshop",
-      description: "Hands-on workshop covering the latest trends in AI and ML, featuring industry experts and practical sessions.",
-      date: "2024-01-15",
-      time: "10:00 AM",
-      duration: "4 hours",
-      location: "Main Auditorium",
-      category: "Technical",
-      organizer: {
-        name: "Dr. Sarah Johnson",
-        avatar: null,
-        initials: "SJ"
-      },
-      attendees: 156,
-      maxAttendees: 200,
-      status: "upcoming",
-      featured: true,
-      tags: ["AI", "Machine Learning", "Workshop"],
-      image: "https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-      id: 2,
-      title: "Annual Tech Symposium 2024",
-      description: "Join us for the biggest tech event of the year with keynotes from industry leaders and networking opportunities.",
-      date: "2024-01-22",
-      time: "9:00 AM",
-      duration: "Full Day",
-      location: "Convention Center",
-      category: "Conference",
-      organizer: {
-        name: "Tech Committee",
-        avatar: null,
-        initials: "TC"
-      },
-      attendees: 450,
-      maxAttendees: 500,
-      status: "upcoming",
-      featured: true,
-      tags: ["Conference", "Networking", "Industry"],
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Hackathon: Code for Change",
-      description: "48-hour hackathon focused on building solutions for social impact. Team up and create something amazing!",
-      date: "2024-02-01",
-      time: "6:00 PM",
-      duration: "48 hours",
-      location: "Computer Lab Block",
-      category: "Competition",
-      organizer: {
-        name: "Coding Club",
-        avatar: null,
-        initials: "CC"
-      },
-      attendees: 89,
-      maxAttendees: 100,
-      status: "upcoming",
-      featured: false,
-      tags: ["Hackathon", "Coding", "Social Impact"],
-      image: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=800&h=400&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Career Guidance Seminar",
-      description: "Expert guidance on career paths, interview preparation, and industry insights from successful alumni.",
-      date: "2024-01-18",
-      time: "2:00 PM",
-      duration: "3 hours",
-      location: "Seminar Hall A",
-      category: "Career",
-      organizer: {
-        name: "Placement Cell",
-        avatar: null,
-        initials: "PC"
-      },
-      attendees: 234,
-      maxAttendees: 300,
-      status: "upcoming",
-      featured: false,
-      tags: ["Career", "Guidance", "Alumni"],
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop"
-    },
-    {
-      id: 5,
-      title: "Cultural Night 2024",
-      description: "Celebrate diversity with performances, food, and cultural exhibitions from around the world.",
-      date: "2024-01-12",
-      time: "7:00 PM",
-      duration: "4 hours",
-      location: "Open Air Theatre",
-      category: "Cultural",
-      organizer: {
-        name: "Cultural Committee",
-        avatar: null,
-        initials: "CC"
-      },
-      attendees: 312,
-      maxAttendees: 400,
-      status: "past",
-      featured: false,
-      tags: ["Cultural", "Performance", "Diversity"],
-      image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=400&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Startup Pitch Competition",
-      description: "Present your startup ideas to industry experts and compete for funding and mentorship opportunities.",
-      date: "2024-02-10",
-      time: "1:00 PM",
-      duration: "5 hours",
-      location: "Innovation Hub",
-      category: "Competition",
-      organizer: {
-        name: "Entrepreneurship Cell",
-        avatar: null,
-        initials: "EC"
-      },
-      attendees: 67,
-      maxAttendees: 80,
-      status: "upcoming",
-      featured: false,
-      tags: ["Startup", "Pitch", "Entrepreneurship"],
-      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=400&fit=crop"
-    }
-  ]
+  // Use shared events data
+  const events = eventsData
 
   const categories = [
     { id: 'all', label: 'All Events', count: events.length },
@@ -261,14 +135,14 @@ const EventsPage = () => {
             <h2 className="text-base font-bold mb-1 leading-tight line-clamp-2 drop-shadow-lg">
               {event.title}
             </h2>
-            <div className="flex items-center gap-3 mb-2 text-xs">
-              <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 transition-all duration-300 hover:bg-black/30">
-                <Calendar className="h-3 w-3" />
-                {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            <div className="flex flex-wrap items-center gap-2 mb-2 text-xs">
+              <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 transition-all duration-300 hover:bg-black/30 mb-1">
+                <Calendar className="h-3 w-3 flex-shrink-0" />
+                <span className="whitespace-nowrap">{formatDate(event.date)}</span>
               </div>
-              <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 transition-all duration-300 hover:bg-black/30">
-                <Clock className="h-3 w-3" />
-                {event.time}
+              <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 transition-all duration-300 hover:bg-black/30 mb-1">
+                <Clock className="h-3 w-3 flex-shrink-0" />
+                <span className="whitespace-nowrap">{event.time}</span>
               </div>
             </div>
             <Button size="sm" className="bg-white/90 backdrop-blur-sm text-blue-700 hover:bg-white hover:scale-105 transition-all duration-200 text-xs px-3 py-1 h-7 shadow-lg">
@@ -306,9 +180,11 @@ const EventsPage = () => {
               <Button size="default" className="bg-white/90 backdrop-blur-sm text-blue-700 hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg">
                 Register Now
               </Button>
-              <Button size="default" variant="outline" className="border-white/30 bg-black/20 backdrop-blur-sm text-white hover:bg-white/20 hover:scale-105 transition-all duration-300">
-                Learn More
-              </Button>
+              <Link href={`/events/${event.id}`}>
+                <Button size="default" variant="outline" className="border-white/30 bg-black/20 backdrop-blur-sm text-white hover:bg-white/20 hover:scale-105 transition-all duration-300">
+                  Learn More
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -319,130 +195,84 @@ const EventsPage = () => {
   const EventCard = ({ event, featured = false }) => (
     <Card className={`group hover:shadow-lg transition-all duration-300 pt-0 ${featured ? 'border-blue-200 dark:border-blue-800' : ''}`}>
       <div className="relative">
-        <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950">
-          <div className="flex h-full items-center justify-center">
-            <Calendar className="h-12 w-12 text-blue-400" />
+        <Link href={`/events/${event.id}`}>
+          <div className="aspect-[16/9] w-full overflow-hidden rounded-t-lg bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 cursor-pointer hover:scale-105 transition-transform duration-300">
+            <div className="flex h-full items-center justify-center">
+              <Calendar className="h-8 w-8 text-blue-400" />
+            </div>
           </div>
-        </div>
+        </Link>
         {featured && (
-          <Badge className="absolute top-3 left-3 bg-blue-600 hover:bg-blue-700">
+          <Badge className="absolute top-2 left-2 text-xs bg-blue-600 hover:bg-blue-700">
             Featured
           </Badge>
         )}
         <Button
           variant="ghost"
           size="sm"
-          className="absolute top-3 right-3 h-8 w-8 p-0 bg-white/90 hover:bg-white dark:bg-black/90 dark:hover:bg-black"
+          className="absolute top-2 right-2 h-7 w-7 p-0 bg-white/90 hover:bg-white dark:bg-black/90 dark:hover:bg-black"
           onClick={() => toggleBookmark(event.id)}
         >
           {bookmarkedEvents.has(event.id) ? (
-            <BookmarkCheck className="h-4 w-4 text-blue-600" />
+            <BookmarkCheck className="h-3.5 w-3.5 text-blue-600" />
           ) : (
-            <Bookmark className="h-4 w-4" />
+            <Bookmark className="h-3.5 w-3.5" />
           )}
         </Button>
       </div>
       
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2 px-4 pt-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
-            <CardTitle className="text-lg font-semibold leading-tight group-hover:text-blue-600 transition-colors">
-              {event.title}
-            </CardTitle>
-            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {formatDate(event.date)}
+            <Link href={`/events/${event.id}`}>
+              <CardTitle className="text-base font-semibold leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 cursor-pointer hover:text-blue-600">
+                {event.title}
+              </CardTitle>
+            </Link>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 mt-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 mb-1 sm:mb-0">
+                <Calendar className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{formatDate(event.date)}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {event.time}
+                <Clock className="h-3 w-3 flex-shrink-0" />
+                <span>{event.time}</span>
               </div>
             </div>
           </div>
-          <Badge className={getCategoryColor(event.category)}>
+          <Badge className={`text-xs ${getCategoryColor(event.category)}`}>
             {event.category}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0">
-        <CardDescription className="line-clamp-2 mb-4">
+      <CardContent className="pt-0 px-4 pb-4">
+        <CardDescription className="line-clamp-2 mb-3 text-sm">
           {event.description}
         </CardDescription>
 
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <MapPin className="h-3 w-3" />
-            {event.location}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={event.organizer.avatar} />
-              <AvatarFallback className="text-xs">{event.organizer.initials}</AvatarFallback>
-            </Avatar>
-            <span className="text-sm text-muted-foreground">by {event.organizer.name}</span>
+            <span className="truncate">{event.location}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Users className="h-3 w-3" />
               <span>{event.attendees}/{event.maxAttendees}</span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="cursor-pointer">
-                    View Details
-                  </Button>
+                  <Link href={`/events/${event.id}`}>
+                    <Button variant="outline" size="sm" className="cursor-pointer text-xs h-8 px-3">
+                      View Details
+                    </Button>
+                  </Link>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>{event.title}</DialogTitle>
-                    <DialogDescription>
-                      {event.description}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="font-medium mb-1">Date & Time</h4>
-                        <p className="text-sm text-muted-foreground">{formatDate(event.date)} at {event.time}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-medium mb-1">Duration</h4>
-                        <p className="text-sm text-muted-foreground">{event.duration}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-medium mb-1">Location</h4>
-                        <p className="text-sm text-muted-foreground">{event.location}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-medium mb-1">Organizer</h4>
-                        <p className="text-sm text-muted-foreground">{event.organizer.name}</p>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-medium mb-2">Tags</h4>
-                      <div className="flex gap-2 flex-wrap">
-                        {event.tags.map(tag => (
-                          <Badge key={tag} variant="secondary">{tag}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex gap-2 pt-4">
-                      <Button className="flex-1">
-                        Register Now
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Share2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
               </Dialog>
-              <Button size="sm">
+              <Button size="sm" className="text-xs h-8 px-3">
                 Register
               </Button>
             </div>
@@ -454,14 +284,6 @@ const EventsPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4">
-        <div>
-          <h1 className="text-3xl font-bold">Campus Events</h1>
-          <p className="text-muted-foreground">Discover and participate in SDIET community events</p>
-        </div>
-      </div>
-      
       {/* Featured Events Carousel Banner */}
       {featuredEvents.length > 0 && (
         <div className="relative -mx-4 sm:-mx-2 md:mx-0 mb-8">
@@ -537,23 +359,25 @@ const EventsPage = () => {
 
       {/* Category Tabs */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
-          {categories.map(category => (
-            <TabsTrigger key={category.id} value={category.id} className="text-xs">
-              {category.label}
-              <Badge variant="secondary" className="ml-1 text-xs">
-                {category.count}
-              </Badge>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex w-auto min-w-full sm:grid sm:w-full sm:grid-cols-3 lg:grid-cols-6 gap-1">
+            {categories.map(category => (
+              <TabsTrigger key={category.id} value={category.id} className="text-xs whitespace-nowrap">
+                {category.label}
+                <Badge variant="secondary" className="ml-1 text-xs">
+                  {category.count}
+                </Badge>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
         <TabsContent value={selectedCategory} className="space-y-6 mt-6">
           {/* Upcoming Events */}
           {upcomingEvents.length > 0 && (
             <section>
               <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {upcomingEvents.map(event => (
                   <EventCard key={event.id} event={event} />
                 ))}
@@ -565,7 +389,7 @@ const EventsPage = () => {
           {pastEvents.length > 0 && (
             <section>
               <h2 className="text-xl font-semibold mb-4">Past Events</h2>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {pastEvents.map(event => (
                   <EventCard key={event.id} event={event} />
                 ))}
