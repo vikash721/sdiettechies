@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sdiettechies.vercel.app/sitemap.xml

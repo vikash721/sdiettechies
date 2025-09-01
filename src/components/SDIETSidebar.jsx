@@ -55,8 +55,8 @@ const mainNavigation = [
     icon: Users,
   },
   {
-    title: "Alumni",
-    url: "/alumni",
+    title: "About Us",
+    url: "/about",
     icon: GraduationCap,
   },
   {
